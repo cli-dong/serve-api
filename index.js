@@ -20,7 +20,7 @@ function getMock(dest) {
   return data
 }
 
-module.exports = function(mock, options) {
+module.exports = function(dest, options) {
   var mock
   var data
   var log = options && options.log
@@ -29,7 +29,7 @@ module.exports = function(mock, options) {
     if (/^(POST|PATCH|PUT|DELETE|GET)$/.test(req.method)) {
 
       if (!mock) {
-        mock = getMock(mock)
+        mock = getMock(dest)
       }
 
       data = mock[req.url]
