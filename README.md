@@ -15,14 +15,14 @@ app.listen(3000)
 
 ## Mocking
 
-> Searching js and json files
+> Searching for js and json files in the directory
 
 ### Pattern
 
 ```json
 {
-  <URL>: {
-    <METHOD>: <VALUE>
+  "<URL>": {
+    "<METHOD>": "<VALUE>"
   }
 }
 ```
@@ -74,9 +74,8 @@ module.exports = {
 {
   "/foo/bar": {
     "*": {
-     'MOCKAPI': {
-       'status': '302',
-       'location': 'some.url'
+     "MOCKAPI": {
+       "redirect": "some.url"
      }
     }
   }

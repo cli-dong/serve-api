@@ -6,7 +6,7 @@ var path = require('path')
 var chalk = require('chalk')
 var extend = require('extend')
 
-function getAPIs(dest) {
+function getMock(dest) {
   dest = path.join(process.cwd(), dest)
 
   var data = {}
@@ -21,19 +21,18 @@ function getAPIs(dest) {
 }
 
 module.exports = function(mock, options) {
-  var apis
+  var mock
   var data
   var log = options && options.log
 
   return function(req, res, next) {
-    if (req.headers['x-requested-with'] === 'XMLHttpRequest' &&
-        /^(POST|PATCH|PUT|DELETE|GET)$/.test(req.method)) {
+    if (/^(POST|PATCH|PUT|DELETE|GET)$/.test(req.method)) {
 
-      if (!apis) {
-        apis = getAPIs(mock)
+      if (!mock) {
+        mock = getMock(mock)
       }
 
-      data = apis[req.url]
+      data = mock[req.url]
 
       if (data) {
         data = data[req.method] || data['*']
@@ -53,11 +52,10 @@ module.exports = function(mock, options) {
         // REDIRECT
         //
         //   'MOCKAPI': {
-        //     'status': '302',
-        //     'location': 'some.url'
+        //     'redirect': 'some.url'
         //   }
-        if (data.MOCKAPI && data.MOCKAPI.status === '302') {
-          req.url = data.MOCKAPI.location
+        if (data.MOCKAPI && data.MOCKAPI.redirect) {
+          req.url = data.MOCKAPI.redirect
           return next()
         }
 
@@ -75,7 +73,7 @@ module.exports = function(mock, options) {
         res.write(typeof data === 'object' ?  JSON.stringify(data) : data)
         res.end()
       } else {
-        if (log) {
+        if (log && req.headers['x-requested-with'] === 'XMLHttpRequest') {
           console.log(chalk.white(chalk.red('  [API 404]') + ' %s'), req.url)
         }
 
