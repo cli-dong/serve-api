@@ -3,7 +3,6 @@
 var fs = require('fs')
 var path = require('path')
 
-var chalk = require('chalk')
 var extend = require('extend')
 
 function getMock(dest) {
@@ -23,7 +22,6 @@ function getMock(dest) {
 module.exports = function(dest, options) {
   var mock
   var data
-  var log = options && options.log
 
   return function(req, res, next) {
     if (/^(POST|PATCH|PUT|DELETE|GET)$/.test(req.method)) {
@@ -59,10 +57,6 @@ module.exports = function(dest, options) {
           return next()
         }
 
-        if (log) {
-          console.log(chalk.white(chalk.blue('  [API 200]') + ' %s'), req.url)
-        }
-
         // json
         if (typeof data === 'object') {
           res.setHeader('Content-Type', 'application/json; charset=utf-8')
@@ -73,10 +67,6 @@ module.exports = function(dest, options) {
         res.write(typeof data === 'object' ?  JSON.stringify(data) : data)
         res.end()
       } else {
-        if (log && req.headers['x-requested-with'] === 'XMLHttpRequest') {
-          console.log(chalk.white(chalk.red('  [API 404]') + ' %s'), req.url)
-        }
-
         next()
       }
     } else {

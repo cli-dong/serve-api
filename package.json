@@ -1,6 +1,6 @@
 {
   "name": "serve-api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "serve mock api middleware",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,6 @@
     }
   ],
   "dependencies": {
-    "chalk": "^1.0.0",
     "extend": "^2.0.0"
   }
 }
