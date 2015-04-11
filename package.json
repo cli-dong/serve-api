@@ -1,6 +1,6 @@
 {
   "name": "serve-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "serve mock api middleware",
   "main": "index.js",
   "scripts": {

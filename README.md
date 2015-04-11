@@ -11,7 +11,7 @@ var serveApi = require('serve-api')
 
 var app = express()
 
-app.use(serveApi('dir/to/api', {'log': true}))
+app.use(serveApi('dir/to/api'))
 app.listen(3000)
 ```
 
