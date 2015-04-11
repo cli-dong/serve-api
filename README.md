@@ -1,5 +1,7 @@
 # serve-api
 
+[![NPM version](https://img.shields.io/npm/v/serve-api.svg?style=flat-square)](https://npmjs.org/package/serve-api)
+
 > Serve middleware for mocking api
 
 ## Usage
