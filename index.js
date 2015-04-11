@@ -19,7 +19,7 @@ function getMock(dest) {
   return data
 }
 
-module.exports = function(dest, options) {
+module.exports = function(dest) {
   var mock
   var data
 
