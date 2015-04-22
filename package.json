@@ -1,6 +1,6 @@
 {
   "name": "serve-api",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "serve mock api middleware",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
     }
   ],
   "dependencies": {
-    "extend": "^2.0.0"
+    "extend": "^2.0.0",
+    "watch": "^0.16.0"
   }
 }

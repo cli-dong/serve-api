@@ -4,19 +4,53 @@ var fs = require('fs')
 var path = require('path')
 
 var extend = require('extend')
+var watch = require('watch')
+
+var mocks = {}
 
 function getMock(dest) {
   dest = path.join(process.cwd(), dest)
 
-  var data = {}
+  function read(dest) {
+    fs.readdirSync(dest).forEach(function(file) {
+      var filePath = path.join(dest, file);
+      var stats = fs.statSync(filePath)
 
-  fs.readdirSync(dest).forEach(function(file) {
-    if (/\.js(on)?$/.test(file)) {
-     extend(data, require(path.join(dest, file)))
-    }
+      if (stats.isFile()) {
+        if (/\.js(on)?$/.test(file)) {
+          // delete require cache
+          delete require.cache[path.resolve(filePath)];
+          extend(mocks, require(filePath))
+        }
+      } else if (stats.isDirectory()) {
+        read(filePath)
+      }
+    })
+  }
+
+  function make() {
+    Object.keys(mocks).forEach(function(key) {
+      delete mocks[key]
+    })
+
+    read(dest)
+  }
+
+  watch.createMonitor(dest, function (monitor) {
+    monitor.on('created', function () {
+      make()
+    })
+    monitor.on('changed', function () {
+      make()
+    })
+    monitor.on('removed', function () {
+      make()
+    })
   })
 
-  return data
+  make()
+
+  return mocks
 }
 
 module.exports = function(dest) {
