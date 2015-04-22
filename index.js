@@ -67,42 +67,58 @@ module.exports = function(dest) {
       data = mock[req.url]
 
       if (data) {
-        data = data[req.method] || data['*']
+        data = data[req.method]
+
+        if (typeof data === 'undefined') {
+          data = data['*']
+        }
       }
 
-      if (data) {
+      if (typeof data === 'undefined') {
+        return next()
+      }
 
-        if (typeof data === 'function') {
-          data = data(req.url, req.query)
-        }
-
-        if (typeof data === 'string' &&
-            /^\{[\w\W]*\}|\[[\w\W]*\]$/.test(data)) {
-          data = JSON.parse(data)
-        }
-
-        // REDIRECT
-        //
-        //   'MOCKAPI': {
-        //     'redirect': 'some.url'
-        //   }
-        if (data.MOCKAPI && data.MOCKAPI.redirect) {
+      // CUSTOMIZE
+      //
+      //   'MOCKAPI': {
+      //     'redirect': 'some.url'
+      //     'status': '201'
+      //     'response': 'created'
+      //   }
+      if (data.MOCKAPI) {
+        // redirect
+        if (data.MOCKAPI.redirect) {
           req.url = data.MOCKAPI.redirect
           return next()
         }
-
-        // json
-        if (typeof data === 'object') {
-          res.setHeader('Content-Type', 'application/json; charset=utf-8')
-        } else {
-          res.setHeader('Content-Type', 'text/html; charset=utf-8')
+        // statusCode
+        if (data.MOCKAPI.status) {
+          res.statusCode = data.MOCKAPI.status
         }
-
-        res.write(typeof data === 'object' ?  JSON.stringify(data) : data)
-        res.end()
-      } else {
-        next()
+        // responseText
+        if (data.MOCKAPI.response) {
+          data = data.MOCKAPI.response
+        }
       }
+
+      if (typeof data === 'function') {
+        data = data(req.url, req.query)
+      }
+
+      if (typeof data === 'string' &&
+          /^\{[\w\W]*\}|\[[\w\W]*\]$/.test(data)) {
+        data = JSON.parse(data)
+      }
+
+      // json
+      if (typeof data === 'object') {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8')
+      } else {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8')
+      }
+
+      res.write(typeof data === 'object' ?  JSON.stringify(data) : data)
+      res.end()
     } else {
       next()
     }
