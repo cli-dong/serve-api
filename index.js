@@ -67,11 +67,7 @@ module.exports = function(dest) {
       data = mock[req.url]
 
       if (data) {
-        data = data[req.method]
-
-        if (typeof data === 'undefined') {
-          data = data['*']
-        }
+        data = (req.method in data) ? data[req.method] : data['*']
       }
 
       if (typeof data === 'undefined') {

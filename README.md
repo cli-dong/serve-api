@@ -5,7 +5,9 @@
 > Serve middleware for mocking api
 
 ## Usage
-```
+
+```js
+// express
 var express = require('express')
 var serveApi = require('serve-api')
 
@@ -13,6 +15,22 @@ var app = express()
 
 app.use(serveApi('dir/to/api'))
 app.listen(3000)
+```
+
+```js
+// dong-queue
+var Queue = require('dong-queue')
+var serveApi = require('serve-api')
+
+var queue = new Queue()
+
+queue.use(serveApi('dir/to/api'))
+
+http.createServer(function onRequest(req, res){
+  queue.run(req, res, function() {
+    // finalhandler
+  })
+})
 ```
 
 ## Mocking
@@ -72,12 +90,15 @@ module.exports = {
 ```
 
 ```json
-// for redirect
+// for redirect, etc
 {
   "/foo/bar": {
     "*": {
      "MOCKAPI": {
-       "redirect": "some.url"
+       "redirect": "some.url",
+       // or change status
+       "status": 201,
+       "response": {}
      }
     }
   }
