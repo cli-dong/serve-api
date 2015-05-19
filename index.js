@@ -88,11 +88,11 @@ module.exports = function(dest) {
           return next()
         }
         // statusCode
-        if (data.MOCKAPI.status) {
+        if ('status' in data.MOCKAPI) {
           res.statusCode = data.MOCKAPI.status
         }
         // responseText
-        if (data.MOCKAPI.response) {
+        if ('response' in data.MOCKAPI) {
           data = data.MOCKAPI.response
         }
       }
