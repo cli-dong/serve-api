@@ -21,12 +21,10 @@
     "type": "git",
     "url": "https://github.com/crossjs/serve-api.git"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/crossjs/serve-api/blob/master/LICENSE-MIT"
-    }
-  ],
+  "licenses": [{
+    "type": "MIT",
+    "url": "https://github.com/crossjs/serve-api/blob/master/LICENSE-MIT"
+  }],
   "dependencies": {
     "extend": "^2.0.0",
     "watch": "^0.16.0"
