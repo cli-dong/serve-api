@@ -20,7 +20,12 @@ function getMock(dest) {
         if (/\.js(on)?$/.test(file)) {
           // delete require cache
           delete require.cache[path.resolve(filePath)];
-          extend(mocks, require(filePath))
+          // file maybe incorrect
+          try {
+            extend(mocks, require(filePath))
+          } catch(e) {
+            // nothing to do
+          }
         }
       } else if (stats.isDirectory()) {
         read(filePath)
